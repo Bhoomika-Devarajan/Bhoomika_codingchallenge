@@ -10,93 +10,93 @@ import com.example.hexaware.dto.PlayerDTO;
 import com.example.hexaware.entity.Player;
 import com.example.hexaware.exception.ResourceNotFoundException;
 import com.example.hexaware.repository.PlayerRepo;
+
 @Service
 public class PlayerImpl implements IPlayer {
-	@Autowired
-	PlayerRepo repo;
 
-	@Override
-	public Player createplayer(PlayerDTO dto) {
-		   Player pl=new Player();
-		    pl.setPlayerid(dto.getPlayerid());
-	        pl.setPlayername(dto.getPlayername());
-	        pl.setJerseyno(dto.getJerseyno());
-	        pl.setRole(dto.getRole());
-	        pl.setTotalmatches(dto.getTotalmatches());
-	        pl.setTeamname(dto.getTeamname());
-	        pl.setCountry(dto.getCountry());
-	        pl.setDescription(dto.getDescription());
-	        return repo.save(pl);
-		
-	}
+    @Autowired
+    private PlayerRepo repo;
 
-	@Override
-	public Player updateplayer(Long id, PlayerDTO dto) {
-		Player pla=repo.findById(id).orElseThrow(()->new ResourceNotFoundException("Player not found"));
-		 //pla.setPlayerid(dto.getPlayerid());
-	        pla.setPlayername(dto.getPlayername());
-	        pla.setJerseyno(dto.getJerseyno());
-	        pla.setRole(dto.getRole());
-	        pla.setTotalmatches(dto.getTotalmatches());
-	        pla.setTeamname(dto.getTeamname());
-	        pla.setCountry(dto.getCountry());
-	        pla.setDescription(dto.getDescription());
-	        return repo.save(pla);
-		
-	}
+   
+    private Player mapToEntity(PlayerDTO dto) {
+        Player pl = new Player();
+        pl.setPlayerid(dto.getPlayerid());
+        pl.setPlayername(dto.getPlayername());
+        pl.setJerseyno(dto.getJerseyno());
+        pl.setRole(dto.getRole());
+        pl.setTotalmatches(dto.getTotalmatches());
+        pl.setTeamname(dto.getTeamname());
+        pl.setCountry(dto.getCountry());
+        pl.setDescription(dto.getDescription());
+        return pl;
+    }
 
-	@Override
-	public PlayerDTO getplayer(Long id) {
-		 Player p = repo.findById(id).orElseThrow(() -> new ResourceNotFoundException("Player not found"));
+    
+    private PlayerDTO mapToDTO(Player p) {
+        PlayerDTO dto = new PlayerDTO();
+        dto.setPlayerid(p.getPlayerid());
+        dto.setPlayername(p.getPlayername());
+        dto.setJerseyno(p.getJerseyno());
+        dto.setRole(p.getRole());
+        dto.setTotalmatches(p.getTotalmatches());
+        dto.setTeamname(p.getTeamname());
+        dto.setCountry(p.getCountry());
+        dto.setDescription(p.getDescription());
+        return dto;
+    }
 
-	        PlayerDTO dto = new PlayerDTO();
+    
+    @Override
+    public Player createplayer(PlayerDTO dto) {
+        Player player = mapToEntity(dto);
+        return repo.save(player);
+    }
 
-	        dto.setPlayerid(p.getPlayerid());
-	        dto.setPlayername(p.getPlayername());
-	        dto.setJerseyno(p.getJerseyno());
-	        dto.setRole(p.getRole());
-	        dto.setTotalmatches(p.getTotalmatches());
-	        dto.setTeamname(p.getTeamname());
-	        dto.setCountry(p.getCountry());
-	        dto.setDescription(p.getDescription());
+    
+    @Override
+    public Player updateplayer(Long id, PlayerDTO dto) {
+        Player existing = repo.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Player not found"));
 
-	        return dto;
-		
-	}
+        existing.setPlayername(dto.getPlayername());
+        existing.setJerseyno(dto.getJerseyno());
+        existing.setRole(dto.getRole());
+        existing.setTotalmatches(dto.getTotalmatches());
+        existing.setTeamname(dto.getTeamname());
+        existing.setCountry(dto.getCountry());
+        existing.setDescription(dto.getDescription());
 
-	@Override
-	public List<PlayerDTO> getallplayer() {
-		
-		 List<Player> players = repo.findAll();
-		    List<PlayerDTO> dtoList = new ArrayList<>();
+        return repo.save(existing);
+    }
 
-		    for (Player p : players) {
+    
+    @Override
+    public PlayerDTO getplayer(Long id) {
+        Player player = repo.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Player not found"));
 
-		        PlayerDTO dto = new PlayerDTO();
+        return mapToDTO(player);
+    }
 
-		        dto.setPlayerid(p.getPlayerid());
-		        dto.setPlayername(p.getPlayername());
-		        dto.setJerseyno(p.getJerseyno());
-		        dto.setRole(p.getRole());
-		        dto.setTotalmatches(p.getTotalmatches());
-		        dto.setTeamname(p.getTeamname());
-		        dto.setCountry(p.getCountry());
-		        dto.setDescription(p.getDescription());
+    
+    @Override
+    public List<PlayerDTO> getallplayer() {
+        List<Player> players = repo.findAll();
+        List<PlayerDTO> dtoList = new ArrayList<>();
 
-		        dtoList.add(dto);
-		    }
+        for (Player p : players) {
+            dtoList.add(mapToDTO(p));
+        }
 
-		    return dtoList;
-		
-		
-	}
+        return dtoList;
+    }
 
-	@Override
-	public void deleteplayer(Long id) {
-		 Player p = repo.findById(id).orElseThrow(() -> new ResourceNotFoundException("Player not found"));
+    
+    @Override
+    public void deleteplayer(Long id) {
+        Player player = repo.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Player not found"));
 
-	        repo.delete(p);
-		
-	}
-
+        repo.delete(player);
+    }
 }

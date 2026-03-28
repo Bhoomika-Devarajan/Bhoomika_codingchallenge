@@ -3,6 +3,7 @@ package com.example.hexaware.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -16,7 +17,7 @@ import com.example.hexaware.dto.PlayerDTO;
 import com.example.hexaware.entity.Player;
 import com.example.hexaware.service.IPlayer;
 import com.example.hexaware.service.PlayerImpl;
-
+@CrossOrigin(origins = "http://localhost:3000")
 @RestController
 @RequestMapping("/api/players")
 public class PlayerController {
